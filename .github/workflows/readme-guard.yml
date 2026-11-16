@@ -61,7 +61,14 @@ jobs:
             if ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
               base=HEAD^1
             fi
-            text=$(git log --format=%B "$base..HEAD")
+          fi
+          # A repository's first commit has no parent: diff it against the empty tree and
+          # read its own message (argus-config#1440).
+          if git rev-parse -q --verify "${base}^{commit}" >/dev/null; then
+            [ "$EVENT" = pull_request ] || text=$(git log --format=%B "$base..HEAD")
+          else
+            base=$(git hash-object -t tree /dev/null)
+            [ "$EVENT" = pull_request ] || text=$(git log --format=%B HEAD)
           fi
           git diff --name-only --no-renames "$base" HEAD >"$RUNNER_TEMP/changed"
           echo "Changed files:"
