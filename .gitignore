@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+*.local
+
+# Pester NUnit output written by `Invoke-Pester -CI`; a CI artifact, never committed
+testResults.xml

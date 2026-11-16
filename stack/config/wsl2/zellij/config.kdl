@@ -1,0 +1,38 @@
+// Zellij config — managed by sys-admin stack/, symlinked to ~/.config/zellij/config.kdl
+
+// Keep the UI clean but always show the tab bar so sessions are navigable
+simplified_ui false
+pane_frames false
+
+// Start in normal mode rather than locked; Ctrl+g still locks if needed
+default_mode "normal"
+
+// Session name shown in status bar
+session_name "argus"
+
+// Mouse support
+mouse_mode true
+
+// Copy to system clipboard on selection
+copy_on_select true
+
+// Scrollback lines
+scroll_buffer_size 10000
+
+keybinds clear-defaults=false {
+    // Keep most defaults; add ergonomic extras
+
+    normal {
+        // Detach without closing the session
+        bind "Ctrl d" { Detach; }
+    }
+
+    shared_except "locked" {
+        // Quick tab switching with Alt+number
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+    }
+}

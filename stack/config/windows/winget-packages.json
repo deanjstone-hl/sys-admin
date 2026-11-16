@@ -1,0 +1,25 @@
+{
+  "_note": "Reference inventory only — install-windows.ps1 downloads directly from GitHub releases or vendor CDNs. This file documents what is installed for auditing purposes.",
+  "CreationDate": "2026-06-28",
+  "apps": [
+    { "name": "PowerShell 7",       "source": "github:PowerShell/PowerShell",         "installedAt": "%ProgramFiles%\\PowerShell\\7\\pwsh.exe" },
+    { "name": "Git for Windows",    "source": "github:git-for-windows/git",            "installedAt": "%ProgramFiles%\\Git\\bin\\git.exe" },
+    { "name": "GitHub CLI",         "source": "github:cli/cli",                        "installedAt": "%ProgramFiles%\\GitHub CLI\\gh.exe" },
+    { "name": "Tailscale",          "source": "https://pkgs.tailscale.com/stable/",    "installedAt": "%ProgramFiles%\\Tailscale\\tailscale.exe" },
+    { "name": "PowerToys",          "source": "github:microsoft/PowerToys",            "installedAt": "%ProgramFiles%\\PowerToys\\PowerToys.exe" },
+    { "name": "Obsidian",           "source": "github:obsidianmd/obsidian-releases",   "installedAt": "%LOCALAPPDATA%\\Obsidian\\Obsidian.exe" },
+    { "name": "SyncTrayzor",        "source": "github:canton7/SyncTrayzor",            "installedAt": "%ProgramFiles%\\SyncTrayzor\\SyncTrayzor.exe" },
+    { "name": "WezTerm",            "source": "github:wez/wezterm (nightly)",          "installedAt": "%ProgramFiles%\\WezTerm\\wezterm.exe" },
+    { "name": "Zed",                "source": "github:zed-industries/zed",             "installedAt": "%LOCALAPPDATA%\\Programs\\Zed\\Zed.exe" },
+    { "name": "Wave Terminal",      "source": "github:waveterminal/waveterm",          "installedAt": "%LOCALAPPDATA%\\Programs\\waveterm\\Wave.exe" },
+    { "name": "Goose",              "source": "github:block/goose",                    "installedAt": "%LOCALAPPDATA%\\Programs\\Goose\\dist-windows\\Goose.exe" },
+    { "name": "Bitwarden Desktop",  "source": "github:bitwarden/clients (desktop-v*)", "installedAt": "%ProgramFiles%\\Bitwarden\\Bitwarden.exe" },
+    { "name": "Speedtest CLI",      "source": "https://install.speedtest.net/app/cli/",      "installedAt": "%ProgramFiles%\\Ookla\\Speedtest CLI\\speedtest.exe" },
+    { "name": "Telegram Desktop",  "source": "github:telegramdesktop/tdesktop",             "installedAt": "%APPDATA%\\Telegram Desktop\\Telegram.exe" },
+    { "name": "Brave Browser",     "source": "github:brave/brave-browser",                  "installedAt": "%ProgramFiles%\\BraveSoftware\\Brave-Browser\\Application\\brave.exe" },
+    { "name": "Zoom",              "source": "https://zoom.us/client/latest/",               "installedAt": "%LOCALAPPDATA%\\Zoom\\bin\\Zoom.exe" },
+    { "name": "Spotify",           "source": "https://download.scdn.co/SpotifySetup.exe",   "installedAt": "%APPDATA%\\Spotify\\Spotify.exe" },
+    { "name": "Claude Desktop",    "source": "https://claude.ai/download (manual)",          "installedAt": "%LOCALAPPDATA%\\Claude\\Claude.exe" },
+    { "name": "Lenovo Vantage",    "source": "winget --source msstore (9WZDNCRFJ4MV) — Store-only UWP app, no GitHub/vendor .exe exists", "installedAt": "AppxPackage E046963F.LenovoCompanion" }
+  ]
+}

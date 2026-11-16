@@ -1,0 +1,21 @@
+[wsl2]
+# WSLg disabled: both 2026-09-02 kernel panics came through the dxg GPU
+# paravirtualisation driver, which only exists to serve WSLg. Nothing on this
+# machine uses it -- DISPLAY/WAYLAND_DISPLAY are unset, zed and code run as
+# remote-server clients with their UI on Windows, and Playwright runs headless.
+# See sys-admin#101.
+guiApplications=false
+memory=6GB
+processors=8
+swap=2GB
+vmIdleTimeout=-1
+# Cap WSL crash dumps: each is ~6 GB and the default of 10 filled C: to
+# 100% on 2026-10-16 (%LOCALAPPDATA%\Temp\wsl-crashes held 59.7 GB).
+maxCrashDumpCount=2
+
+[experimental]
+autoMemoryReclaim=gradual
+networkingMode=mirrored
+dnsTunneling=true
+firewall=true
+sparseVhd=true

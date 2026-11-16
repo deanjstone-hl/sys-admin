@@ -1,0 +1,23 @@
+{
+    "name": "Dimidium",
+    "background": "#141414",
+    "foreground": "#BAB7B6",
+    "cursorColor": "#37E57B",
+    "selectionBackground": "#2A2A2A",
+    "black": "#000000",
+    "brightBlack": "#A29F9F",
+    "red": "#D75052",
+    "brightRed": "#FF643B",
+    "green": "#60B442",
+    "brightGreen": "#37E57B",
+    "yellow": "#DB9C11",
+    "brightYellow": "#FCCD1A",
+    "blue": "#1A7FE3",
+    "brightBlue": "#688DFD",
+    "purple": "#AF5ED2",
+    "brightPurple": "#ED6FE9",
+    "cyan": "#1DB6BB",
+    "brightCyan": "#32E0FB",
+    "white": "#BAB7B6",
+    "brightWhite": "#DEE3E4"
+}

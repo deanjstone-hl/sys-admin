@@ -1,0 +1,7 @@
+# Vendored from deanjstone/argus-config scripts/ci. Never edit these scripts here: run
+# scripts/sync-release-scripts.sh from argus-config against this repo, which rewrites them and
+# this lock. release-scripts-check.sh fails CI on a copy that differs from it.
+source deanjstone/argus-config 48a708dfddfdf8977f5d3ca3f9a1dccf33d745bb
+8afad079c130bb0d9f496dd92f8d7127c5f86c38fe42b4029d21201c2fdde16b  release-proof.sh
+0e44fb3ee496e0fabbf5cd5ad52067ab023893875a7ef440268dd5e453a96abd  release-scripts-check.sh
+55bce77bd6070158c5d8a7b1723b8a2e92ba0b1ecfe70a7acb91d28e8a5af9f5  release-with-retry.sh

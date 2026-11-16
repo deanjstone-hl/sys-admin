@@ -1,0 +1,23 @@
+{
+    "name": "Dimidium Light",
+    "background": "#F5F3F1",
+    "foreground": "#1C1918",
+    "cursorColor": "#00813A",
+    "selectionBackground": "#CDC8C4",
+    "black": "#1C1918",
+    "brightBlack": "#56514E",
+    "red": "#B83337",
+    "brightRed": "#C93B20",
+    "green": "#2E7318",
+    "brightGreen": "#00813A",
+    "yellow": "#8C6200",
+    "brightYellow": "#946700",
+    "blue": "#0456A8",
+    "brightBlue": "#4060D8",
+    "purple": "#7B2FA8",
+    "brightPurple": "#8A3FB5",
+    "cyan": "#147A7E",
+    "brightCyan": "#007B8B",
+    "white": "#EDE9E6",
+    "brightWhite": "#FFFFFF"
+}

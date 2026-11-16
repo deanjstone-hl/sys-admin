@@ -1,0 +1,10 @@
+sys-admin
+Copyright 2026 Dean Stone
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE). It was published
+on 16 November 2026 as a fresh-history public repository; the earlier history stays private in
+the sys-admin-archive repository of the same owner.
+
+Every file in this repository was written by its owner. Third-party software it installs or
+configures (Syncthing, Tailscale, WezTerm, Zed, Zellij, T3 Code, Vaultwarden, Bitwarden, and the
+rest named in the README and stack/docs) is not included and keeps its own licence.

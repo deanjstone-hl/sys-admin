@@ -1,0 +1,6 @@
+# fnm — the one Node version per host (argus-config#1164)
+# Active (default): v24.18.0. The installer refuses to add a second version; to move to a new one,
+# replace: install it, move the aliases, rebuild native modules, remove the old
+# (argus-config docs/reference/one-node-version.md).
+
+v24.18.0

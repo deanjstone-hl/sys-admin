@@ -1,0 +1,160 @@
+// Zed settings
+//
+// For information on how to configure Zed, see the Zed
+// documentation: https://zed.dev/docs/configuring-zed
+//
+// To see all of Zed's default settings without changing your
+// custom settings, run `zed: open default settings` from the
+// command palette (cmd-shift-p / ctrl-shift-p)
+{
+  "agent_servers": {
+    "claude-acp": {
+      "type": "registry"
+    }
+  },
+  "wsl_connections": [
+    {
+      "distro_name": "Ubuntu",
+      "user": null,
+      "projects": [
+        {
+          "paths": [
+            "/home/deanj"
+          ]
+        }
+      ]
+    }
+  ],
+  "session": {
+    "trust_all_worktrees": true
+  },
+  "ui_font_size": 16,
+  "buffer_font_size": 15,
+  "buffer_font_family": "CaskaydiaCove Nerd Font Mono",
+  "terminal": {
+    "font_family": "CaskaydiaCove Nerd Font Mono",
+    "shell": {
+      "with_arguments": {
+        "program": "wsl.exe",
+        "args": ["-e", "zsh"]
+      }
+    }
+  },
+  "theme": {
+    "mode": "system",
+    "light": "Dimidium Light",
+    "dark": "Dimidium",
+  },
+
+  // ── Editor ────────────────────────────────────────────────────────────────
+  "tab_size": 2,
+  "soft_wrap": "editor_width",
+  "format_on_save": "on",
+  "formatter": "prettier",
+  "linked_edits": true,
+  "rainbow_brackets": true,
+  "show_whitespaces": "trailing",
+  "hover_popover_delay": 200,
+  "sticky_scroll": {
+    "enabled": true
+  },
+  "inlay_hints": {
+    "enabled": true,
+    "show_parameter_hints": true,
+    "show_type_hints": true,
+    "show_other_hints": true
+  },
+  "file_types": {
+    "Tailwind CSS": ["*.css"]
+  },
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/node_modules",
+    "**/.landscape",
+    "**/.ServiceHub",
+    "**/.vscode-server",
+    "**/.vscode-remote-containers",
+    "**/.cache",
+    "**/.local",
+    "**/.bun",
+    "**/.npm"
+  ],
+  "languages": {
+    "JavaScript": { "formatter": "prettier" },
+    "TypeScript": { "formatter": "prettier" },
+    "TSX": { "formatter": "prettier" },
+    "JSX": { "formatter": "prettier" },
+    "CSS": { "formatter": "prettier" },
+    "Tailwind CSS": { "formatter": "prettier" },
+    "HTML": { "formatter": "prettier" },
+    "JSON": { "formatter": "prettier" },
+    "JSONC": { "formatter": "prettier" }
+  },
+
+  // ── AI Assistant ──────────────────────────────────────────────────────────
+  // Sign in via `zed: sign in to zed.dev` (Ctrl+Shift+P) to use Claude Pro.
+  "agent": {
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-4-6"
+    },
+  },
+
+  "language_models": {
+    "anthropic": {
+      "available_models": [
+        {
+          "name": "claude-sonnet-4-6",
+          "display_name": "Claude Sonnet 4.6",
+          "max_tokens": 200000,
+          "max_output_tokens": 16000
+        },
+        {
+          "name": "claude-opus-4-8",
+          "display_name": "Claude Opus 4.8",
+          "max_tokens": 200000,
+          "max_output_tokens": 16000
+        },
+        {
+          "name": "claude-haiku-4-5-20251001",
+          "display_name": "Claude Haiku 4.5",
+          "max_tokens": 200000,
+          "max_output_tokens": 16000
+        }
+      ]
+    }
+  },
+
+  // ── MCP Context Servers ───────────────────────────────────────────────────
+  // stdio servers run via wsl.exe to use WSL2 Node (fnm default alias).
+  // Replace all PLACEHOLDER values with tokens from ~/.claude.json
+  "context_servers": {
+    "claude-memory": {
+      "url": "https://memory.myargus.cc/mcp",
+      "headers": {
+        "Authorization": "Bearer PLACEHOLDER_MCP_MEMORY_TOKEN"
+      }
+    },
+    "filesystem": {
+      "command": "wsl.exe",
+      "args": [
+        "-e", "bash", "-c",
+        "PATH=/home/deanj/.local/share/fnm/aliases/default/bin:$PATH npx -y @modelcontextprotocol/server-filesystem /home/deanj/repos"
+      ]
+    },
+    "supabase": {
+      "command": "wsl.exe",
+      "args": [
+        "-e", "bash", "-c",
+        "PATH=/home/deanj/.local/share/fnm/aliases/default/bin:$PATH npx -y @supabase/mcp-server-supabase@latest --access-token PLACEHOLDER_SUPABASE_TOKEN"
+      ]
+    },
+    "github": {
+      "command": "wsl.exe",
+      "args": [
+        "-e", "bash", "-c",
+        "PATH=/home/deanj/.local/share/fnm/aliases/default/bin:$PATH GITHUB_PERSONAL_ACCESS_TOKEN=PLACEHOLDER_GITHUB_PAT npx -y @modelcontextprotocol/server-github"
+      ]
+    }
+  }
+}

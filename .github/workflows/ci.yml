@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Called by release.yml as the fallback test when main has no full green run of the
+  # promoted SHA (sys-admin#189).
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  # One group per PR, one per main commit. Never ${{ github.ref }}: a group holds one
+  # pending run, so on main the next merge would cancel this commit's queued run.
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  bats:
+    name: bats (bash scripts)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # The release scripts in scripts/ci are vendored from argus-config and synced, never
+      # edited here (argus-config#1269): this fails on a hand-edited copy.
+      - name: Release scripts match their lock
+        run: bash scripts/ci/release-scripts-check.sh
+
+      - name: Install bats
+        run: command -v bats || (sudo apt-get update -qq && sudo apt-get install -y bats)
+
+      # The scrub scan in tests/bats/scripts/public-safe.bats needs gitleaks (sys-admin#194).
+      # Pinned release, checked against its published sha256, never a moving download.
+      - name: Install gitleaks
+        env:
+          GITLEAKS_VERSION: 8.30.1
+          GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+        run: |
+          curl -fsSL -o "$RUNNER_TEMP/gitleaks.tar.gz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check -
+          mkdir -p "$HOME/.local/bin"
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$HOME/.local/bin" gitleaks
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Run the check
+        run: bash scripts/check.sh bats
+
+  pester:
+    name: Pester (PowerShell scripts)
+    # Under pwsh 7 on the hosted Ubuntu image (pwsh and Pester come with it). The suite
+    # passes 8/8 on Linux (sys-admin#144) and no test here needs Windows (sys-admin#194).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Pester
+        shell: pwsh
+        run: if (-not (Get-Module -ListAvailable Pester)) { Install-Module -Name Pester -Force -SkipPublisherCheck -Scope CurrentUser }
+
+      - name: Run tests
+        shell: pwsh
+        run: Invoke-Pester -Path tests/pester -CI

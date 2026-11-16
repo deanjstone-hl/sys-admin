@@ -1,0 +1,131 @@
+name: Release
+
+# Versions are cut on promotion, not on a merge (sys-admin#189, argus-config#1133, map #1048,
+# ADR-005): the owner's Approve on the ops-hub card fast-forwards `deploy`, and this push
+# tags and publishes the release. semantic-release reads every commit since the last tag,
+# so one promotion that carries many main commits yields one release. It commits nothing
+# back: a release commit pushed to `deploy` would fork it from main and break fast-forward
+# promotion, so CHANGELOG.md is frozen at 1.2.1 and the GitHub Release notes carry the
+# history. Never a `workflow_run` trigger: GitHub reports the default branch as the run's
+# branch there, and semantic-release silently dry-runs (design-system/190).
+on:
+  push:
+    branches: [deploy]
+  # Manual retry: a promotion whose release run failed, or whose head commit carried the
+  # skip-CI marker and so ran no workflow. Dispatch it with `--ref deploy`; any other ref
+  # is refused by the `if:` on every job below.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+# One release at a time, never cancelled midway: two promotions in quick succession release
+# in order.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  # Test before release (argus-config#1167, #1198). The promoted SHA is already on main, so
+  # this job first asks whether anything would ship, then whether main's CI already proved
+  # the SHA: a CI run on main (push or schedule) passed both its jobs and every other main
+  # run on the SHA is green (scripts/ci/release-proof.sh). A red main run fails this job, so
+  # a red SHA never releases. With no full main run of the SHA yet, the next job runs CI
+  # here instead.
+  gate:
+    name: Test before release (main CI on this SHA)
+    # A dispatch from any other ref would release unpromoted commits.
+    if: github.ref == 'refs/heads/deploy'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      release: ${{ steps.anything.outputs.release }}
+      reuse: ${{ steps.proof.outputs.reuse }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # semantic-release publishes only for feat/fix/perf/revert or a breaking change
+      # (default commit-analyzer). Most promotions carry none, and then there is nothing
+      # for a test to gate: no test runs and no version is cut. A promotion can carry more
+      # commits than a push event lists (GitHub truncates the list), so this reads git,
+      # never the event.
+      - name: Anything to release?
+        id: anything
+        run: |
+          last=$(git describe --tags --abbrev=0 --match 'v[0-9]*' 2>/dev/null || true)
+          range="${last:+$last..}HEAD"
+          if [ -z "$last" ] \
+             || git log "$range" --format=%s | grep -qE '^((feat|fix|perf|revert)(\(.+\))?!?:|Revert )' \
+             || git log "$range" --format=%B | grep -q 'BREAKING CHANGE'; then
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Nothing releasable since $last: no test, no release."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Did main's CI already test this SHA in full?
+        id: proof
+        if: steps.anything.outputs.release == 'true'
+        run: bash scripts/ci/release-proof.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          # The script is vendored from argus-config and hard-codes nothing: it reuses
+          # nothing when RELEASE_PROOF_WORKFLOW is unset. This repo's whole test is the CI
+          # workflow, and both its jobs must have succeeded.
+          RELEASE_PROOF_WORKFLOW: CI
+          RELEASE_PROOF_JOBS: |
+            bats (bash scripts)
+            Pester (PowerShell scripts)
+
+  # The fallback: the same CI workflow a push to main runs (ci.yml, called): bats and Pester.
+  test:
+    name: Test before release (bats, Pester)
+    needs: gate
+    if: needs.gate.outputs.release == 'true' && needs.gate.outputs.reuse != 'true'
+    permissions:
+      contents: read
+    uses: ./.github/workflows/ci.yml
+
+  release:
+    name: Release
+    needs: [gate, test]
+    # Runs only after a passing test: main's green full run of this SHA (reuse) or the CI
+    # run above. `!cancelled()` lets it run when `test` was skipped for reuse.
+    if: >-
+      !cancelled()
+      && github.ref == 'refs/heads/deploy'
+      && needs.gate.result == 'success'
+      && needs.gate.outputs.release == 'true'
+      && (needs.test.result == 'success'
+          || (needs.test.result == 'skipped' && needs.gate.outputs.reuse == 'true'))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # `packageManager` in package.json stays the one place the pnpm version is pinned
+      # (argus-config#621, #594). The job runs on a hosted runner and uses no action from a
+      # private repository (sys-admin#194).
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Release
+        run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

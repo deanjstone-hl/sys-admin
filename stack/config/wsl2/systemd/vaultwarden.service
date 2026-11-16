@@ -1,0 +1,19 @@
+[Unit]
+Description=Vaultwarden Password Manager
+After=network.target
+
+[Service]
+User=vaultwarden
+Group=vaultwarden
+WorkingDirectory=/opt/vaultwarden
+ExecStart=/usr/local/bin/vaultwarden
+Restart=on-failure
+Environment=ROCKET_PORT=8080
+Environment=ROCKET_ADDRESS=127.0.0.1
+Environment=DATA_FOLDER=/opt/vaultwarden/data
+Environment=DOMAIN=http://localhost:8080
+# Update DOMAIN once Tailscale Serve is configured:
+# Environment=DOMAIN=https://<SYS_ADMIN_TAILSCALE_HOST_VAULTWARDEN>
+
+[Install]
+WantedBy=multi-user.target

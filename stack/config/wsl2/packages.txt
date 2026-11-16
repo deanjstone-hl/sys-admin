@@ -1,0 +1,13 @@
+# apt packages — maintained by install-wsl2.sh
+# Run: sudo apt-get install -y $(grep -v '^#' packages.txt | tr '\n' ' ')
+
+build-essential
+curl
+git
+jq
+mosh
+openssh-server
+# tmux — replaced by Zellij (ADR-002); kept here until migration is confirmed stable
+# tmux
+unzip
+wget
