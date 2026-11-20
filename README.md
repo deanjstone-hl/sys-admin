@@ -16,7 +16,7 @@ Full rule and per-artefact table: [stack/docs/SCOPE.md](./stack/docs/SCOPE.md). 
 
 ```
 stack/      LGN5 dev stack: config/ (tracked tool config), install scripts, drift and version checks, docs/ (architecture, scope, ADRs)
-scripts/    check.sh (the local check), check-versions.sh, require-deploy-checkout.sh, private-value.sh, scrub-scan.sh, ci/ (the vendored release scripts), syncthing/, owner-steps/
+scripts/    check.sh (the local check), heavy-lock.sh and heavy-lock.lock (vendored from argus-config), check-versions.sh, require-deploy-checkout.sh, private-value.sh, scrub-scan.sh, ci/ (the vendored release scripts), syncthing/, owner-steps/
 skills/     Claude Code sysadmin skills: wsl-root, provision-server, update-tools, syncthing-pair,
             health-check, config-audit, ssh-perms-check, tmux-mgmt
 tests/      bats/ (bash scripts) and pester/ (PowerShell scripts)
@@ -41,7 +41,7 @@ git push origin HEAD:main
 ```
 
 `check.sh` runs the same steps as CI. A step the machine cannot run (`pester` without `pwsh`) is reported as skipped and CI covers it.
-It resolves the repo root from its own path, so `bash /path/to/sys-admin/scripts/check.sh` checks this tree from any directory (another repo's pre-push gate calls it that way).
+It resolves the repo root from its own path, so `bash /path/to/sys-admin/scripts/check.sh` checks this tree from any directory (another repo's pre-push gate calls it that way). The gate takes the host-wide heavy lock ([argus-config/1506](https://github.com/deanjstone/argus-config/issues/1506)): `scripts/check.sh` re-runs itself through `scripts/heavy-lock.sh`, so only one full check runs at a time on a host, whichever thread or CI job starts it, and it also waits while memory `some avg60` is 10 or more. A queued run prints `waiting for the host lock` and starts when the holder ends; it exits 75 without running once `HEAVY_LOCK_TIMEOUT` (3600 s) passes. `scripts/heavy-lock.sh` and `scripts/heavy-lock.lock` are vendored byte-for-byte from argus-config (its `scripts/sync-heavy-lock.sh` rewrites both; never edit them here), and `tests/bats/scripts/heavy-lock.bats` fails on a copy that no longer matches its lock.
 
 ## Stack scripts (`stack/`)
 

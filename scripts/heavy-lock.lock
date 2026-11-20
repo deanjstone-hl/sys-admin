@@ -1,0 +1,5 @@
+# Vendored from deanjstone/argus-config scripts/heavy-lock.sh. Never edit the script here: run
+# scripts/sync-heavy-lock.sh from argus-config against this repo, which rewrites it and this
+# lock. A test of this repo fails on a copy that differs from the sha256 below.
+source deanjstone/argus-config 35ae8d3c70f9fec6fddba44386823659f2dcb61d
+367f5727e009289891db1400f6c8c302be1c67211fd9b1c098c56d923ff8e3e1  heavy-lock.sh

@@ -20,7 +20,7 @@ setup() {
 
 check_from() {
   cd "$1"
-  PATH="$STUB_BIN:$PATH" run bash "$CHECK_SH" bats shellcheck
+  HEAVY_LOCK_HELD=1 PATH="$STUB_BIN:$PATH" run bash "$CHECK_SH" bats shellcheck
 }
 
 @test "check.sh checks this repo's tree when run from another git repo" {
