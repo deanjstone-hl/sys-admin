@@ -40,10 +40,11 @@ jobs:
     timeout-minutes: 5
     steps:
       # A pull request needs its merge commit and the base tip (depth 2). A push needs the
-      # range it carried, so it fetches the history.
+      # range it carried, so it fetches the history. The depths are strings: the number 0 is falsy, so
+      # `&& 0 ||` fell through to 2 and a push was judged on its last commit only (argus-config#1540).
       - uses: actions/checkout@v4
         with:
-          fetch-depth: ${{ github.event_name == 'push' && 0 || 2 }}
+          fetch-depth: ${{ github.event_name == 'push' && '0' || '2' }}
 
       # The body and the commit messages reach the script through the environment, never
       # interpolated into the shell text.
