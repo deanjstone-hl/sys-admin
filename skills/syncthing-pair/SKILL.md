@@ -22,8 +22,8 @@ this file: Step 0 re-reads it.
 
 **Private values are keys, not text.** This repository is public, so each Tailscale address
 below is the name of a Bitwarden Secrets Manager (`bws secret list`) secret of the same name:
-`SYS_ADMIN_TAILSCALE_IP_WSL`, `SYS_ADMIN_TAILSCALE_IP_LGN5`, `SYS_ADMIN_TAILSCALE_IP_HOMELAB`
-and `SYS_ADMIN_TAILSCALE_IP_DJ15`. Read one with
+`SYS_ADMIN_TAILSCALE_IP_WSL`, `SYS_ADMIN_TAILSCALE_IP_LAPTOP`, `SYS_ADMIN_TAILSCALE_IP_HOMELAB`
+and `SYS_ADMIN_TAILSCALE_IP_IPHONE`. Read one with
 `bash scripts/private-value.sh <KEY>` (it prints the environment variable of that name if set,
 else the secret, and never anything else). Device IDs are named by their 7-character prefix;
 the full ID is never written here.
@@ -51,10 +51,10 @@ by its ID prefix, never by its name.
 | Name | ID prefix | Live names still in config | Tailscale IP |
 |------|-----------|----------------------------|--------------|
 | `WSL` | `QZY5U6X` | `LNV-LGN5` (own), `LGN5-WSL2` (LGN5), `wsl2` (homelab) | `<SYS_ADMIN_TAILSCALE_IP_WSL>` |
-| `LGN5` | `EJZYLDC` | `LNV-LGN5` (all nodes) | `<SYS_ADMIN_TAILSCALE_IP_LGN5>` |
+| `LGN5` | `EJZYLDC` | `LNV-LGN5` (all nodes) | `<SYS_ADMIN_TAILSCALE_IP_LAPTOP>` |
 | `homelab` | `QUTF5GA` | — | `<SYS_ADMIN_TAILSCALE_IP_HOMELAB>` |
-| `dj15-SyncTrain` | `LTS4Z7E` | — | `<SYS_ADMIN_TAILSCALE_IP_DJ15>` |
-| `dj15-VaultSync` | `X2ASWHV` | LGN5 config only | `<SYS_ADMIN_TAILSCALE_IP_DJ15>` |
+| `dj15-SyncTrain` | `LTS4Z7E` | — | `<SYS_ADMIN_TAILSCALE_IP_IPHONE>` |
+| `dj15-VaultSync` | `X2ASWHV` | LGN5 config only | `<SYS_ADMIN_TAILSCALE_IP_IPHONE>` |
 
 Only the hosts above are mesh nodes; any other tailnet host is outside the mesh.
 
@@ -134,8 +134,8 @@ from one of the commands above.
 | LGN5 → WSL | `tcp://127.0.0.1:22001` (WSL's BEP port) |
 | Any → homelab | `tcp://<SYS_ADMIN_TAILSCALE_IP_HOMELAB>:22000` |
 | homelab → WSL | `tcp://<SYS_ADMIN_TAILSCALE_IP_WSL>:22001` |
-| homelab → LGN5 | `tcp://<SYS_ADMIN_TAILSCALE_IP_LGN5>:22000` |
-| Any → iOS | `tcp://<SYS_ADMIN_TAILSCALE_IP_DJ15>:22000` |
+| homelab → LGN5 | `tcp://<SYS_ADMIN_TAILSCALE_IP_LAPTOP>:22000` |
+| Any → iOS | `tcp://<SYS_ADMIN_TAILSCALE_IP_IPHONE>:22000` |
 | Any → new remote machine | `tcp://<tailscale-ip>:22000` |
 
 WSL and LGN5 share one network stack, so they reach each other on loopback; every other leg

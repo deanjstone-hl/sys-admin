@@ -87,7 +87,7 @@ Connections**:
 
 | Setting | Value |
 |---|---|
-| Sync Protocol Listen Addresses | `tcp://<SYS_ADMIN_TAILSCALE_IP_LGN5>:22000, quic://<SYS_ADMIN_TAILSCALE_IP_LGN5>:22000` |
+| Sync Protocol Listen Addresses | `tcp://<SYS_ADMIN_TAILSCALE_IP_LAPTOP>:22000, quic://<SYS_ADMIN_TAILSCALE_IP_LAPTOP>:22000` |
 | Enable Local Discovery | ❌ unchecked |
 | Enable Relaying | ❌ unchecked |
 | Global Discovery | ❌ unchecked — matches the rest of the mesh (see `README.md` Tailscale-only table); do not leave this enabled "for address exchange", every device address should be pinned explicitly instead |

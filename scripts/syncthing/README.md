@@ -76,8 +76,8 @@ All four legs to/through homelab are live and connected as of 2026-07-31.
 | Name | Device ID | Tailscale IP | OS | App |
 |---|---|---|---|---|
 | LNV-LGN5-WSL2 | `QZY5U6X` | `<SYS_ADMIN_TAILSCALE_IP_WSL>` | Ubuntu/WSL2 | syncthing (systemd user) |
-| LNV-LGN5 (Windows) | `EJZYLDC` | `<SYS_ADMIN_TAILSCALE_IP_LGN5>` | Windows 11 | syncthing (native, Windows Service via NSSM — SyncTrayzor removed) |
-| dj15 (iPhone) | `LTS4Z7E` | `<SYS_ADMIN_TAILSCALE_IP_DJ15>` | iOS | SyncTrain (`dj15-SyncTrain` in the live config). The earlier VaultSync device (`dj15-VaultSync`, `X2ASWHV…`) was abandoned and removed from every node ([#127](https://github.com/deanjstone/sys-admin/issues/127)). |
+| LNV-LGN5 (Windows) | `EJZYLDC` | `<SYS_ADMIN_TAILSCALE_IP_LAPTOP>` | Windows 11 | syncthing (native, Windows Service via NSSM — SyncTrayzor removed) |
+| dj15 (iPhone) | `LTS4Z7E` | `<SYS_ADMIN_TAILSCALE_IP_IPHONE>` | iOS | SyncTrain (`dj15-SyncTrain` in the live config). The earlier VaultSync device (`dj15-VaultSync`, `X2ASWHV…`) was abandoned and removed from every node ([#127](https://github.com/deanjstone/sys-admin/issues/127)). |
 | homelab (Dell Inspiron) | `QUTF5GA` | `<SYS_ADMIN_TAILSCALE_IP_HOMELAB>` | Ubuntu 24.04 | syncthing (systemd user), introducer (`sys-admin#37`) |
 
 ## Folder Map
