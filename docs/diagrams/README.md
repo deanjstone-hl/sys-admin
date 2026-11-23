@@ -10,7 +10,7 @@ Self-contained HTML/SVG diagrams drawn with the [diagram-design](https://github.
 | [`installer-run.html`](installer-run.html) | Process | `apply` | `dry` `guard` `link` `node` `units` `tools` `drift` | `stack/install-wsl2.sh`, `scripts/require-deploy-checkout.sh`, `README.md` |
 | [`build-deploy.html`](build-deploy.html) | Pipeline | `deploy` | `edit` `push` `ci` `approve` `release` `owner` | `README.md`, `.github/workflows/`, `scripts/check.sh` |
 
-Each step node is a `<g id="step-<flow>-<step>">`, the deep-link contract of [ops-hub#13](https://github.com/deanjstone/ops-hub/issues/13): the hub links `#/diagrams/<repo>/<path>#<step-id>`, and the page highlights the targeted step (`:target`). Anything inferred is marked `[speculation]` in the diagram or its source line.
+Each step node is a `<g id="step-<flow>-<step>">`, the deep-link contract of [ops-hub#13](https://github.com/deanjstone-hl/ops-hub/issues/13): the hub links `#/diagrams/<repo>/<path>#<step-id>`, and the page highlights the targeted step (`:target`). Anything inferred is marked `[speculation]` in the diagram or its source line.
 
 ## Not drawn
 
