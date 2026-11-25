@@ -121,3 +121,28 @@ EOF
   [ "$status" -ne 0 ]
   [ "$(sha256sum < "$CONFIG_DIR/config.xml")" = "$before" ]
 }
+
+# The config repo is being renamed argus-config -> config (argus-config#1401): without
+# BW_HELPER the Bitwarden helper is looked up in ~/repos/config, then ~/repos/argus-config.
+fake_bw_helper() { # <repo dir name>
+  mkdir -p "$FAKE_HOME/repos/$1/envs/wsl2/bashrc.d"
+  printf 'bitwarden-session() { echo "session-from-%s"; }\n' "$1" > "$FAKE_HOME/repos/$1/envs/wsl2/bashrc.d/bitwarden.sh"
+  printf '#!/usr/bin/env bash\necho "$*" >> "%s/bw.log"; echo "%s"\n' "$FAKE_HOME" "$PASSWORD" > "$STUB_DIR/bw"
+  chmod +x "$STUB_DIR/bw"
+}
+
+@test "--bw-item finds the Bitwarden helper in ~/repos/config when BW_HELPER is unset" {
+  FAKE_HOME="$(mktemp -d)"
+  fake_bw_helper config
+  HOME="$FAKE_HOME" run env -u BW_HELPER -u BW_SESSION "$SCRIPT" --config "$CONFIG_DIR" --bw-item some-item
+  [ "$status" -eq 0 ]
+  grep -q -- '--session session-from-config' "$FAKE_HOME/bw.log"
+}
+
+@test "--bw-item falls back to the Bitwarden helper in ~/repos/argus-config" {
+  FAKE_HOME="$(mktemp -d)"
+  fake_bw_helper argus-config
+  HOME="$FAKE_HOME" run env -u BW_HELPER -u BW_SESSION "$SCRIPT" --config "$CONFIG_DIR" --bw-item some-item
+  [ "$status" -eq 0 ]
+  grep -q -- '--session session-from-argus-config' "$FAKE_HOME/bw.log"
+}

@@ -60,6 +60,39 @@ teardown() {
   grep -qxF "stub: --install $expected" "$TEST_HOME/check-calls.txt"
 }
 
+# The config repo is being renamed argus-config -> config (argus-config#1401): without
+# ONE_NODE_CHECK the installer looks in ~/repos/config first, then ~/repos/argus-config.
+install_check_copy() { # <repo dir name> <label>
+  mkdir -p "$TEST_HOME/repos/$1/scripts"
+  printf '#!/usr/bin/env bash\necho "%s: $*" >> "%s/check-calls.txt"\n' "$2" "$TEST_HOME" > "$TEST_HOME/repos/$1/scripts/check-one-node.sh"
+}
+
+@test "install-wsl2.sh finds the one-node check in ~/repos/config when ONE_NODE_CHECK is unset" {
+  unset ONE_NODE_CHECK
+  install_check_copy config new
+  HOME="$TEST_HOME" run "$REPO_DIR/stack/install-wsl2.sh" --dry-run
+  [ "$status" -eq 0 ]
+  grep -q '^new: --install ' "$TEST_HOME/check-calls.txt"
+}
+
+@test "install-wsl2.sh falls back to ~/repos/argus-config for the one-node check" {
+  unset ONE_NODE_CHECK
+  install_check_copy argus-config old
+  HOME="$TEST_HOME" run "$REPO_DIR/stack/install-wsl2.sh" --dry-run
+  [ "$status" -eq 0 ]
+  grep -q '^old: --install ' "$TEST_HOME/check-calls.txt"
+}
+
+@test "install-wsl2.sh prefers ~/repos/config over ~/repos/argus-config for the one-node check" {
+  unset ONE_NODE_CHECK
+  install_check_copy config new
+  install_check_copy argus-config old
+  HOME="$TEST_HOME" run "$REPO_DIR/stack/install-wsl2.sh" --dry-run
+  [ "$status" -eq 0 ]
+  grep -q '^new: --install ' "$TEST_HOME/check-calls.txt"
+  ! grep -q '^old: ' "$TEST_HOME/check-calls.txt"
+}
+
 @test "install-wsl2.sh stops before fnm install when the one-node check refuses" {
   printf '#!/usr/bin/env bash\necho "refusing: 2 node installs" >&2\nexit 1\n' > "$ONE_NODE_STUB"
   HOME="$TEST_HOME" run "$REPO_DIR/stack/install-wsl2.sh" --dry-run

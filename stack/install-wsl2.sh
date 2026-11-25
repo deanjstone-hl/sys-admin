@@ -93,7 +93,11 @@ NODE_VERSION=$(grep -v '^#' "$REPO_DIR/config/wsl2/fnm-versions" | grep -v '^[[:
 if [[ -n "$NODE_VERSION" ]]; then
   # One node per host (argus-config#1164): the check lives in argus-config and refuses when
   # installing $NODE_VERSION would add a second node. A node upgrade is a replace step.
-  ONE_NODE_CHECK="${ONE_NODE_CHECK:-$HOME/repos/argus-config/scripts/check-one-node.sh}"
+  # The config repo is being renamed argus-config -> config: prefer ~/repos/config, fall back to the old path.
+  if [[ -z "${ONE_NODE_CHECK:-}" ]]; then
+    ONE_NODE_CHECK="$HOME/repos/config/scripts/check-one-node.sh"
+    [[ -f "$ONE_NODE_CHECK" ]] || ONE_NODE_CHECK="$HOME/repos/argus-config/scripts/check-one-node.sh"
+  fi
   if [[ -f "$ONE_NODE_CHECK" ]]; then
     bash "$ONE_NODE_CHECK" --install "$NODE_VERSION" || exit 1
   elif command -v node &>/dev/null; then

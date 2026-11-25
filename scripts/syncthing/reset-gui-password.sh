@@ -71,7 +71,12 @@ fi
 if [[ -n "$BW_ITEM" ]]; then
   session="${BW_SESSION:-}"
   if [[ -z "$session" ]]; then
-    helper="${BW_HELPER:-$HOME/repos/argus-config/envs/wsl2/bashrc.d/bitwarden.sh}"
+    helper="${BW_HELPER:-}"
+    if [[ -z "$helper" ]]; then
+      # The config repo is being renamed argus-config -> config: prefer ~/repos/config, fall back to the old path.
+      helper="$HOME/repos/config/envs/wsl2/bashrc.d/bitwarden.sh"
+      [[ -f "$helper" ]] || helper="$HOME/repos/argus-config/envs/wsl2/bashrc.d/bitwarden.sh"
+    fi
     if [[ ! -f "$helper" ]]; then
       echo "ERROR: no BW_SESSION and no Bitwarden helper at $helper — pipe the password on stdin instead" >&2
       exit 1
