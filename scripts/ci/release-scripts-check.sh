@@ -2,7 +2,7 @@
 # Fails when this repo's vendored release scripts have drifted from the argus-config
 # source they name (argus-config#1269, map #1259).
 #
-# argus-config holds the one source of release-with-retry.sh, release-proof.sh and this
+# argus-config holds the one source of release-with-retry.sh, release-proof.sh, release-gate.sh and this
 # script. Every deploy repo vendors all three byte-for-byte, with a release-scripts.lock
 # beside them that names the source commit and the sha256 of each file.
 # `scripts/sync-release-scripts.sh <repo>` in argus-config writes the copies and the lock;
@@ -42,7 +42,7 @@ done
 dir="${dir:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)}"
 lock="$dir/release-scripts.lock"
 source_dir="scripts/ci"
-files=(release-proof.sh release-scripts-check.sh release-with-retry.sh)
+files=(release-gate.sh release-proof.sh release-scripts-check.sh release-with-retry.sh)
 fix="run scripts/sync-release-scripts.sh from argus-config against this repo"
 
 sha256_of() {
@@ -64,8 +64,10 @@ if [ ! -f "$lock" ]; then
   exit 1
 fi
 
-named_commit=$(sed -n 's/^source deanjstone\/argus-config \([0-9a-f]\{7,40\}\)$/\1/p' "$lock" | head -n 1)
-[ -n "$named_commit" ] || fail "$lock names no source commit (a 'source deanjstone/argus-config <sha>' line)"
+# The config repo is being renamed argus-config -> config and moved between owners
+# (argus-config#1401), so a lock may name either owner and either name.
+named_commit=$(sed -n -E 's#^source deanjstone(-hl)?/(argus-config|config) ([0-9a-f]{7,40})$#\3#p' "$lock" | head -n 1)
+[ -n "$named_commit" ] || fail "$lock names no source commit (a 'source deanjstone/argus-config <sha>' line, or deanjstone-hl/ or /config)"
 
 for name in "${files[@]}"; do
   locked=$(sed -n "s/^\([0-9a-f]\{64\}\)  $name\$/\1/p" "$lock" | head -n 1)
