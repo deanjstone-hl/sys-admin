@@ -56,7 +56,7 @@ Changes the machine (owner steps, run on LGN5; both support a dry run). A real r
 
 ```bash
 bash stack/install-wsl2.sh [--dry-run]          # symlinks, apt packages, fnm, binaries, systemd units; checks the AI CLIs, Playwright and gh
-# it refuses to run `fnm install` when that would add a second node (argus-config scripts/check-one-node.sh, one node per host); `stack/config/wsl2/fnm-versions` holds the one version
+# it refuses to run `fnm install` when that would add a second node (the config repo's scripts/check-one-node.sh, found under `~/repos/config` else `~/repos/argus-config`, or `ONE_NODE_CHECK`; one node per host); `stack/config/wsl2/fnm-versions` holds the one version
 bash stack/install-user-units.sh [--dry-run]    # copy user-scope systemd units/drop-ins from stack/config/wsl2/systemd-user/ (install-wsl2.sh calls it)
 ```
 
