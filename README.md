@@ -31,13 +31,13 @@ docs/       runbooks and machine facts: backups, Bitwarden items, T3 Code on WSL
 
 ## Check and push
 
-Trunk-based: small conventional commits straight to `main`, no branch, no pull request.
+Branch + PR: work on a branch off `origin/main` in your own worktree, push small conventional commits regularly, and open a draft PR on the first push. Run the local check once before marking the PR ready; when `main` moves, rebase onto `origin/main` and push with `--force-with-lease` (your own PR branch only). Merge with `gh pr merge --rebase --delete-branch` once every check on the head SHA is green. Never push to `main` directly.
 
 ```bash
 bash scripts/check.sh              # bats, ShellCheck, Pester; prints `check: pass <short sha>`
 bash scripts/check.sh bats         # or any of: bats shellcheck pester
-git pull --rebase
-git push origin HEAD:main
+git fetch && git rebase origin/main
+git push --force-with-lease        # own PR branch only, after a rebase
 ```
 
 `check.sh` runs the same steps as CI. A step the machine cannot run (`pester` without `pwsh`) is reported as skipped and CI covers it.
