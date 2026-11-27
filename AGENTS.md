@@ -44,7 +44,7 @@ docs/           — runbooks, environment state, architecture notes
 
 ## Checks and pushing
 
-Trunk-based development: small conventional commits straight to `main`, no branch, no pull request. Before every push run `bash scripts/check.sh` (Bats, ShellCheck, Pester; it prints `check: pass <short sha>`), then `git pull --rebase`, then push. CI runs the same steps on every push to `main`. Details: `scripts/README.md`.
+Branch + PR: work on a branch off `origin/main` in your own worktree, push small conventional commits regularly, open a draft PR on the first push. Run `bash scripts/check.sh` (Bats, ShellCheck, Pester; it prints `check: pass <short sha>`) once before marking the PR ready. Rebase onto `origin/main` when it moves and push with `--force-with-lease` (own PR branch only). Merge with `gh pr merge --rebase --delete-branch` once every check on the head SHA is green. No direct pushes to `main`. CI runs the same steps on every PR and push to `main`. Details: `scripts/README.md`.
 
 ## Environments
 
